@@ -1,4 +1,3 @@
-// вариант 4
 #include <iostream>
 
 int main() {
@@ -9,7 +8,7 @@ int main() {
 	}
 	int summa = 0;
 	for (int i = 0; i < 10; i++) {
-		summa += i;
+		summa += num[i];
 		std::cout << num[i];
 		std::cout << " ";
 	}
@@ -27,9 +26,9 @@ int main() {
 	for (int i = 1; i < 10; i++) {
 		if (num[i] < num[i - 1]) {
 			int el = num[i];
-			for (int j = i - 1; j >= -1; j--) {
-				if (j == 0) { 
-					num[j] = el;
+			for (int j = i - 1; j >= -1; j - 1) {
+				if (j == -1) { 
+					num[0] = el;
 					break; }
 				if (num[j] > el) {
 					num[j + 1] = num[j];
@@ -41,7 +40,9 @@ int main() {
 			}
 		}
 	}
+	std::cout << "\n";
 	for (int i = 9; i >= 0; i--) {
 		std::cout << num[i];
 		std::cout << " ";
+	}
 }
