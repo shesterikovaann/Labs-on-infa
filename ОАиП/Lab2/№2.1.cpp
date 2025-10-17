@@ -1,3 +1,5 @@
+// вариант 4
+
 #include <iostream>
 
 int main() {
