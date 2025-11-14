@@ -1,0 +1,6 @@
+sort
+find task
+find task
+add tasks
+sort
+find priority
