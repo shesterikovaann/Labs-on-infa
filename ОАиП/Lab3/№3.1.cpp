@@ -147,7 +147,7 @@ void find_priority() {
 int main() {
     setlocale(LC_ALL, "Russian");
     while (true) {
-        std::cout << "Введите команду: (add tasks, find task, sort, find priority)" << std::endl;
+        std::cout << "Введите команду: (add tasks, find task, sort, find priority, end)" << std::endl;
         std::string command;
         std::getline(std::cin, command);
         if (command == "add tasks") {
@@ -172,6 +172,12 @@ int main() {
             find_priority();
             std::ofstream out("output.txt", std::ios::app);
             out << "find priority" << std::endl;
+            out.close();
+        }
+        if (command == "end") {
+            break;
+            std::ofstream out("output.txt", std::ios::app);
+            out << "end" << std::endl;
             out.close();
         }
     }
