@@ -1,7 +1,6 @@
 #include <iostream>
 #include <fstream>
 #include <string>
-#include <limits>
 // Шестерикова Анна ИУ1-12Б Вариант 4 Умный дом
 
 // Класс управления освещением
