@@ -15,7 +15,6 @@
 #include <fstream>
 #include <libpq-fe.h>
 
-// ========== HELPER FUNCTIONS FOR WORKING WITH LIBPQ ==========
 
 class PGResult {
 private:
@@ -87,7 +86,7 @@ public:
     }
 };
 
-// ========== DATABASE CLASSES ==========
+// DATABASE CLASSES 
 
 // Template class for PostgreSQL connection via libpq-fe.h
 template<typename T>
@@ -108,7 +107,7 @@ private:
     }
 
 public:
-    // Constructor (Requirement: 1.1.1)
+    // Constructor 
     explicit DatabaseConnection(const std::string& connStr)
         : conn(nullptr), inTransaction(false) {
 
@@ -133,7 +132,7 @@ public:
         }
     }
 
-    // Execute SQL query with result return (Requirement: 1.1.2)
+    // Execute SQL query with result return 
     std::vector<std::vector<T>> executeQuery(const std::string& query) {
         std::vector<std::vector<T>> result;
 
@@ -172,7 +171,7 @@ public:
         return result;
     }
 
-    // Execute SQL queries without data return (Requirement: 1.1.3)
+    // Execute SQL queries without data return 
     int executeNonQuery(const std::string& query) {
         if (!conn) {
             setError("No database connection");
@@ -190,7 +189,7 @@ public:
         return affected[0] ? std::stoi(affected) : 1;
     }
 
-    // Start transaction (Requirement: 1.1.4)
+    // Start transaction
     bool beginTransaction() {
         if (inTransaction) {
             setError("Transaction already started");
@@ -204,7 +203,7 @@ public:
         return false;
     }
 
-    // Complete transaction (Requirement: 1.1.5)
+    // Complete transaction 
     bool commitTransaction() {
         if (!inTransaction) {
             setError("No active transaction");
@@ -218,7 +217,7 @@ public:
         return false;
     }
 
-    // Rollback transaction (Requirement: 1.1.6)
+    // Rollback transaction 
     bool rollbackTransaction() {
         if (!inTransaction) {
             setError("No active transaction to rollback");
@@ -232,17 +231,17 @@ public:
         return false;
     }
 
-    // Create stored procedure or function (Requirement: 1.1.7)
+    // Create stored procedure or function 
     bool createFunction(const std::string& functionSql) {
         return executeNonQuery(functionSql) > 0;
     }
 
-    // Create trigger (Requirement: 1.1.8)
+    // Create trigger 
     bool createTrigger(const std::string& triggerSql) {
         return executeNonQuery(triggerSql) > 0;
     }
 
-    // Check current transaction status (Requirement: 1.1.9)
+    // Check current transaction status 
     std::string getTransactionStatus() const {
         if (!conn) return "No connection";
         if (inTransaction) return "Transaction active";
@@ -276,7 +275,7 @@ public:
     }
 };
 
-// ========== PAYMENT STRATEGY CLASSES ==========
+// PAYMENT STRATEGY CLASSES 
 
 class PaymentStrategy {
 public:
@@ -349,7 +348,7 @@ public:
     }
 };
 
-// ========== ORDER CLASSES ==========
+// ORDER CLASSES 
 
 class OrderItem {
 private:
@@ -532,7 +531,7 @@ public:
     }
 };
 
-// ========== BASE USER CLASS ==========
+// BASE USER CLASS 
 
 class User {
 protected:
@@ -553,7 +552,7 @@ public:
 
     virtual ~User() = default;
 
-    // Pure virtual functions (Requirement: OOP principles)
+    // Pure virtual functions 
     virtual void displayMenu() = 0;
     virtual bool canPerformAction(const std::string& action) const = 0;
     virtual void processChoice(int choice, DatabaseConnection<std::string>& db) = 0;
@@ -564,14 +563,14 @@ public:
         return order;
     }
 
-    // Create order (Requirement: 3.1.1 createOrder)
+    // Create order 
     std::shared_ptr<Order> createOrder(int orderId, double totalPrice = 0.0) {
         auto order = std::make_shared<Order>(orderId, userId, totalPrice);
         orders.push_back(order);
         return order;
     }
 
-    // View order status (Requirement: 3.1.1 viewOrderStatus)
+    // View order status 
     std::string viewOrderStatus(int orderId) const {
         auto it = std::find_if(orders.begin(), orders.end(),
             [orderId](const std::shared_ptr<Order>& order) {
@@ -584,7 +583,7 @@ public:
         return "Order not found";
     }
 
-    // Cancel order (Requirement: 3.1.1 cancelOrder)
+    // Cancel order 
     bool cancelOrder(int orderId, DatabaseConnection<std::string>& db) {
         auto it = std::find_if(orders.begin(), orders.end(),
             [orderId](const std::shared_ptr<Order>& order) {
@@ -601,7 +600,7 @@ public:
         return false;
     }
 
-    // Add order (aggregation)
+    // Add order 
     void addOrder(std::shared_ptr<Order> order) { orders.push_back(order); }
 
     // Getters
@@ -613,14 +612,14 @@ public:
     int getLoyaltyLevel() const { return loyaltyLevel; }
     const std::vector<std::shared_ptr<Order>>& getOrders() const { return orders; }
 
-    // Lambda for permission checking (Requirement: 5.2.3)
+    // Lambda for permission checking 
     std::function<bool(const std::string&)> createPermissionChecker() const {
         return [this](const std::string& action) -> bool {
             return this->canPerformAction(action);
             };
     }
 
-    // Lambda for filtering orders by status (Requirement: 5.2.1)
+    // Lambda for filtering orders by status 
     std::function<std::vector<std::shared_ptr<Order>>()> createOrderFilter(const std::string& statusFilter) {
         return [this, statusFilter]() {
             std::vector<std::shared_ptr<Order>> filtered;
@@ -632,7 +631,7 @@ public:
             };
     }
 
-    // Calculate total spent via std::accumulate (Requirement: 5.2.2)
+    // Calculate total spent via std::accumulate
     double calculateTotalSpent() const {
         return std::accumulate(orders.begin(), orders.end(), 0.0,
             [](double total, const std::shared_ptr<Order>& order) {
@@ -641,7 +640,7 @@ public:
     }
 };
 
-// ========== ADMIN CLASS ==========
+// ADMIN CLASS 
 
 class Admin : public User {
 public:
@@ -695,7 +694,7 @@ public:
     }
 
 private:
-    // Admin methods (Requirement: 3.2.1)
+    // Admin methods 
     void addProduct(DatabaseConnection<std::string>& db) {
         std::cout << "\n--- ADD NEW PRODUCT ---" << std::endl;
 
@@ -1087,7 +1086,7 @@ private:
     }
 };
 
-// ========== MANAGER CLASS ==========
+// MANAGER CLASS 
 
 class Manager : public User {
 private:
@@ -1342,7 +1341,7 @@ private:
     }
 };
 
-// ========== CUSTOMER CLASS ==========
+// CUSTOMER CLASS
 
 class Customer : public User {
 public:
@@ -1787,7 +1786,7 @@ private:
     }
 };
 
-// ========== MAIN FUNCTION ==========
+// MAIN FUNCTION 
 
 int main() {
     std::cout << std::string(60, '=') << std::endl;
@@ -1803,7 +1802,7 @@ int main() {
         return 1;
     }
 
-    // Test data (in real system - authentication)
+    // Test data 
     std::map<int, std::shared_ptr<User>> users;
 
     // Create test users
