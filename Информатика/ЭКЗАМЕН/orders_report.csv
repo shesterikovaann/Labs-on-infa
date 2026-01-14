@@ -1,0 +1,4 @@
+OrderID,Customer,Status,TotalPrice,OrderDate,ItemsCount
+2,Anna Buyer,completed,32999.00,2026-01-13 22:17:22,1
+1,Ivan Buyer,completed,48997.00,2026-01-13 20:52:08,2
+3,Ivan Buyer,canceled,8999.00,2026-01-13 20:52:08,1
